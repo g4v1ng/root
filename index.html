@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="script.js"></script>
+            <title>Scrabble Helper</title>
+        <style>
+            *{font-family:sans-serif}
+            input{
+                background-color:gainsboro;
+                font-family:'Comic Sans MS';
+            }
+            input:invalid{
+                border-style:solid;
+                border-color:crimson;
+                border-width:2px;
+                outline-style:solid;
+            }
+            select{
+                background-color:gainsboro;
+            }
+            button{
+                background-color:gainsboro;
+            }
+            body{
+                background-color:lightcoral;
+            }
+        </style>
+        <body>
+            <h1>Scrabble Helper</h1>
+            <p>Search type:
+                <select id="query">
+                    <option value="anagram">Anagram Search</option>
+                    <option value="pattern">Pattern Search</option>
+                    <option value="subanagram">Subanagram Search</option>
+                </select>
+            </p>
+            <p>Using:
+                <input type="checkbox" id="array" value="array">Array
+                <input type="checkbox" id="trie" value="trie" checked>Trie
+                <input type="checkbox" id="hash" value="hash">Hash Map
+            </p>
+            <p>Your letters (use ? for blanks):
+            <input type="text" id="letters" maxlength="15" pattern="[A-Za-z?]*" style="text-transform: uppercase;">
+            </p>
+            <button onclick="search()">Search</button>
+            <div id="results">
+                
+            </div>
+        </body>
+    </head>
+</html>
