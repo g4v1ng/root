@@ -119,7 +119,7 @@ function patternSearch(letters, results){
         }
     }
     if(useHash){
-        if(letters.split("?") < 4){     
+        if(letters.split("?").length < 4){     
             if(letters.includes("?")){
                 for(var i = 0; i < 26; i++){
                     patternSearch(letters.replace("?", String.fromCharCode(65+i)), results);
