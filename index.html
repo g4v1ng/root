@@ -23,7 +23,18 @@
                 background-color:gainsboro;
             }
             body{
-                background-color:lightcoral;
+                background-color:lightblue;
+            }
+            div{
+                font-family: "Lucida Console", Monaco, monospace;
+                white-space:nowrap;
+                line-height:1.2;
+            }
+            span{
+                font-family: "Lucida Console", Monaco, monospace;
+            }
+            label{
+                user-select:none;
             }
         </style>
         <body>
@@ -36,9 +47,9 @@
                 </select>
             </p>
             <p>Using:
-                <input type="checkbox" id="array" value="array">Array
-                <input type="checkbox" id="trie" value="trie" checked>Trie
-                <input type="checkbox" id="hash" value="hash">Hash Map
+                <input type="checkbox" id="array" value="array"><label for="array">Array</label>
+                <input type="checkbox" id="trie" value="trie" checked><label for="trie">Trie</label>
+                <input type="checkbox" id="hash" value="hash"><label for="hash">Hash Map</label>
             </p>
             <p>Your letters (use ? for blanks):
             <input type="text" id="letters" maxlength="15" pattern="[A-Za-z?]*" style="text-transform: uppercase;">

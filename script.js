@@ -56,15 +56,13 @@ function search(){
     else if(query == "pattern") patternSearch(letters, results);
     else if(query == "subanagram") subanagramSearch(letters, results);
     time = Date.now() - t1;
-    if(document.getElementById("trie").checked){
-        results.sort(function(x, y){
-            if(x.length < y.length) return 1;
-            if(x.length > y.length) return -1;
-            if(x < y) return -1;
-            if(x > y) return 1;
-            return 0;
-        });
-    }
+    results.sort(function(x, y){
+        if(x[0].length < y[0].length) return 1;
+        if(x[0].length > y[0].length) return -1;
+        if(x[0] < y[0]) return -1;
+        if(x[0] > y[0]) return 1;
+        return 0;
+    });
     document.getElementById("results").innerText += "\n" + results.length + " results found in " + time + " ms";
     display(results);
 }
@@ -81,31 +79,30 @@ function anagramSearch(letters, results){
             var valid = true;
             var checkletters = letters.split("");
             var wordletters = array[i].split("");
+            var blanks = "";
             for(var n = 0; n < wordletters.length; n++){
                 if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
-                else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                else if(checkletters.includes("?")){
+                    checkletters.splice(checkletters.indexOf("?"), 1);
+                    blanks += wordletters[n];
+                }
                 else{
                     valid = false;
                     break;
                 } 
             }
-            if(valid) results.push(array[i]);
+            if(valid) results.push([array[i], blanks]);
         }
     }
     if(useTrie){
         //something here
     }
     if(useHash){
-        if(letters.split("?").length < 4){    
-            if(letters.includes("?")){
-                for(var i = 0; i < 26; i++){
-                    anagramSearch(letters.replace("?", String.fromCharCode(65+i)), results);
-                }  
-            }  
+        if(!letters.includes("?")){    
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
             for(var i = 0; i < anagrams.length; i++){
-                if(!results.includes(anagrams[i])) results.push(anagrams[i]);
+                if(!results.includes(anagrams[i])) results.push([anagrams[i], ""]);
             }
         }else{
             for(var i = 0; i < map.values.length; i++){
@@ -120,9 +117,13 @@ function anagramSearch(letters, results){
                     var valid = true;
                     var checkletters = letters.split("");
                     var keyletters = key.split("");
+                    var blanks = "";
                     for(var n = 0; n < keyletters.length; n++){
                         if(checkletters.includes(keyletters[n])) checkletters.splice(checkletters.indexOf(keyletters[n]), 1);
-                        else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                        else if(checkletters.includes("?")) {
+                            checkletters.splice(checkletters.indexOf("?"), 1);
+                            blanks += keyletters[n];
+                        }
                         else{
                             valid = false;
                             break;
@@ -130,7 +131,7 @@ function anagramSearch(letters, results){
                     }
                     if(valid){
                         for(var j = 0; j < root.value.length; j++){
-                            results.push(root.value[j]);
+                            results.push([root.value[j], blanks]);
                         }
                     }
                     root = root.next;
@@ -150,31 +151,29 @@ function patternSearch(letters, results){
             if(word.length < letters.length) continue;
             if(word.length > letters.length) break;
             var valid = true;
+            var blanks = "";
             for(var n = 0; n < word.length; n++){
-                if(letters[n] == "?" || letters[n] == word[n]) continue;
-                else{
-                    valid = false;
-                    break;
-                } 
+                if(letters[n] == word[n]) continue;
+                if(letters[n] == "?"){
+                    blanks += word[n];
+                    continue;
+                }
+                valid = false;
+                break;
             }
-            if(valid) results.push(array[i]);
+            if(valid) results.push([array[i], blanks]);
         }
     }
     if(useTrie){
         // something here
     }
     if(useHash){
-        if(letters.split("?").length < 4){     
-            if(letters.includes("?")){
-                for(var i = 0; i < 26; i++){
-                    patternSearch(letters.replace("?", String.fromCharCode(65+i)), results);
-                }  
-            }  
+        if(!letters.includes("?")){     
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
             if(anagrams == null) return;
             for(var i = 0; i < anagrams.length; i++){
-                if(anagrams[i] == letters) results.push(anagrams[i]);
+                if(anagrams[i] == letters) results.push([anagrams[i], ""]);
             }
         }else{
             for(var i = 0; i < map.values.length; i++){
@@ -183,16 +182,19 @@ function patternSearch(letters, results){
                 while(root != null){
                     for(var j = 0; j < root.value.length; j++){
                         var word = root.value[j];
+                        var blanks = "";
                         if(word.length != letters.length) continue;
                         var valid = true;
                         for(var n = 0; n < word.length; n++){
-                            if(letters[n] == "?" || letters[n] == word[n]) continue;
-                            else{
-                                valid = false;
-                                break;
-                            } 
+                            if(letters[n] == word[n]) continue;
+                            if(letters[n] == "?"){
+                                blanks += word[n];
+                                continue;
+                            }
+                            valid = false;
+                            break;
                         }       
-                        if(valid) results.push(word);
+                        if(valid) results.push([word, blanks]);
                     }
                     root = root.next;
                 }
@@ -211,15 +213,19 @@ function subanagramSearch(letters, results){
             var valid = true;
             var checkletters = letters.split("");
             var wordletters = array[i].split("");
+            var blanks = "";
             for(var n = 0; n < wordletters.length; n++){
                 if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
-                else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                else if(checkletters.includes("?")) {
+                    checkletters.splice(checkletters.indexOf("?"), 1);
+                    blanks += wordletters[n];
+                }
                 else{
                     valid = false;
                     break;
                 } 
             }
-            if(valid) results.push(array[i]);
+            if(valid) results.push([array[i], blanks]);
         }
     }
     if(useTrie){
@@ -236,15 +242,19 @@ function subanagramSearch(letters, results){
                     var valid = true;
                     var checkletters = letters.split("");
                     var wordletters = word.split("");
+                    var blanks = "";
                     for(var n = 0; n < wordletters.length; n++){
                         if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
-                        else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                        else if(checkletters.includes("?")) {
+                            checkletters.splice(checkletters.indexOf("?"), 1);
+                            blanks += wordletters[n];
+                        }
                         else{
                             valid = false;
                             break;
                         }
                     }    
-                    if(valid) results.push(word);
+                    if(valid) results.push([word, blanks]);
                 }
                 root = root.next;
             }
@@ -294,12 +304,26 @@ function cleanDefinition(def){
     return def;
 }
 
+function highlightBlanks(word, blanks){
+    for(var i = 0; i < blanks.length; i++){
+        var n = word.lastIndexOf(blanks[i]);
+        while(n > 1 && word[n-2] == "\""){
+            n = word.lastIndexOf(blanks[i], n-1);
+        }
+        word = (word.substring(0, n) 
+        + "<span style=\"color: red;\">" + blanks[i] + "</span>"
+        + word.substring(n+1));
+    }
+    return word;
+}
+
 function display(results){
     var text = "";
     for(var i = 0; i < results.length; i++){
-        text +="\n" + results[i] + ": " + getDefinition(results[i], "x");
+        var word = highlightBlanks(results[i][0], results[i][1]);
+        text += "<br>" + word + ": " + getDefinition(results[i][0], "x");
     }
-    document.getElementById("results").innerText += text;
+    document.getElementById("results").innerHTML += text;
 }
 
 readWords();
