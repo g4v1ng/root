@@ -89,6 +89,9 @@ function anagramSearch(letters, results){
             if(valid) results.push(array[i]);
         }
     }
+    if(useTrie){
+        //something here
+    }
     if(useHash){
         if(letters.split("?").length < 4){    
             if(letters.includes("?")){
@@ -154,6 +157,9 @@ function patternSearch(letters, results){
             if(valid) results.push(array[i]);
         }
     }
+    if(useTrie){
+        // something here
+    }
     if(useHash){
         if(letters.split("?").length < 4){     
             if(letters.includes("?")){
@@ -212,6 +218,9 @@ function subanagramSearch(letters, results){
             }
             if(valid) results.push(array[i]);
         }
+    }
+    if(useTrie){
+        // something here
     }
     if(useHash){
         for(var i = 0; i < map.values.length; i++){
