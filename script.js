@@ -2,6 +2,9 @@ var definition = {};
 var array = [];
 var map;
 
+
+
+
 function readWords(){
     var req = new XMLHttpRequest();
     req.onload = function(){
@@ -300,3 +303,10 @@ function display(results){
 }
 
 readWords();
+
+window.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (document.activeElement == document.getElementById("letters") && event.key == "Enter"){
+        search();
+    }
+});
