@@ -90,10 +90,46 @@ function anagramSearch(letters, results){
         }
     }
     if(useHash){
-        var key = letters.split("").sort().join("");
-        var anagrams = map.get(key);
-        for(var i = 0; i < anagrams.length; i++){
-            results.push(anagrams[i]);
+        if(letters.split("?").length < 4){    
+            if(letters.includes("?")){
+                for(var i = 0; i < 26; i++){
+                    anagramSearch(letters.replace("?", String.fromCharCode(65+i)), results);
+                }  
+            }  
+            var key = letters.split("").sort().join("");
+            var anagrams = map.get(key);
+            for(var i = 0; i < anagrams.length; i++){
+                results.push(anagrams[i]);
+            }
+        }else{
+            for(var i = 0; i < map.values.length; i++){
+                if(map.values[i] == null) continue;
+                var root = map.values[i].root;
+                while(root != null){
+                    var key = root.key;
+                    if(key.length != letters.length){
+                        root = root.next;
+                        continue;
+                    }
+                    var valid = true;
+                    var checkletters = letters.split("");
+                    var keyletters = key.split("");
+                    for(var n = 0; n < keyletters.length; n++){
+                        if(checkletters.includes(keyletters[n])) checkletters.splice(checkletters.indexOf(keyletters[n]), 1);
+                        else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                        else{
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if(valid){
+                        for(var j = 0; j < root.value.length; j++){
+                            results.push(root.value[j]);
+                        }
+                    }
+                    root = root.next;
+                }
+            }
         }
     }
 }
@@ -157,23 +193,51 @@ function patternSearch(letters, results){
 }
 
 function subanagramSearch(letters, results){
-    for(var i = 0; i < array.length; i++){
-        if(results.includes(array[i])) continue;
-        if(array[i].length > letters.length) break;
-        var valid = true;
-        var checkletters = letters.split("");
-        var wordletters = array[i].split("");
-        for(var n = 0; n < wordletters.length; n++){
-            if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
-            else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
-            else{
-                valid = false;
-                break;
-            } 
+    var useHash = document.getElementById("hash").checked;
+    var useTrie = document.getElementById("trie").checked;
+    var useArray = document.getElementById("array").checked;
+    if(useArray){
+        for(var i = 0; i < array.length; i++){
+            if(array[i].length > letters.length) break;
+            var valid = true;
+            var checkletters = letters.split("");
+            var wordletters = array[i].split("");
+            for(var n = 0; n < wordletters.length; n++){
+                if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
+                else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                else{
+                    valid = false;
+                    break;
+                } 
+            }
+            if(valid) results.push(array[i]);
         }
-        if(valid) results.push(array[i]);
     }
-    
+    if(useHash){
+        for(var i = 0; i < map.values.length; i++){
+            if(map.values[i] == null) continue;
+            var root = map.values[i].root;
+            while(root != null){
+                for(var j = 0; j < root.value.length; j++){
+                    var word = root.value[j];
+                    if(word.length > letters.length) break;
+                    var valid = true;
+                    var checkletters = letters.split("");
+                    var wordletters = word.split("");
+                    for(var n = 0; n < wordletters.length; n++){
+                        if(checkletters.includes(wordletters[n])) checkletters.splice(checkletters.indexOf(wordletters[n]), 1);
+                        else if(checkletters.includes("?")) checkletters.splice(checkletters.indexOf("?"), 1);
+                        else{
+                            valid = false;
+                            break;
+                        }
+                    }    
+                    if(valid) results.push(word);
+                }
+                root = root.next;
+            }
+        }
+    }
 }
 
 function getDefinition(word, pos){
