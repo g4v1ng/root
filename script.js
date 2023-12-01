@@ -105,7 +105,7 @@ function anagramSearch(letters, results){
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
             for(var i = 0; i < anagrams.length; i++){
-                results.push(anagrams[i]);
+                if(!results.includes(anagrams[i])) results.push(anagrams[i]);
             }
         }else{
             for(var i = 0; i < map.values.length; i++){
