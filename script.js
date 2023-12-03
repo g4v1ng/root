@@ -1,7 +1,7 @@
 var definition = {};
 var array = [];
 var map;
-
+var results = [];
 
 
 
@@ -48,13 +48,12 @@ function fillHashMap(dict){
 
 function search(){
     document.getElementById("results").innerText = "";
-    var results = [];
     var letters = document.getElementById("letters").value.toUpperCase();
     var query = document.getElementById("query").value;
     var t1 = Date.now();
-    if(query == "anagram") anagramSearch(letters, results);
-    else if(query == "pattern") patternSearch(letters, results);
-    else if(query == "subanagram") subanagramSearch(letters, results);
+    if(query == "anagram") anagramSearch(letters);
+    else if(query == "pattern") patternSearch(letters);
+    else if(query == "subanagram") subanagramSearch(letters);
     time = Date.now() - t1;
     results.sort(function(x, y){
         if(x[0].length < y[0].length) return 1;
@@ -63,11 +62,11 @@ function search(){
         if(x[0] > y[0]) return 1;
         return 0;
     });
-    document.getElementById("results").innerText += "\n" + results.length + " results found in " + time + " ms";
-    display(results);
+    document.getElementById("results").innerHTML += "<br>" + results.length + " results found in " + time + " ms<br>";
+    displayResults(0);
 }
 
-function anagramSearch(letters, results){
+function anagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
@@ -141,7 +140,7 @@ function anagramSearch(letters, results){
     }
 }
 
-function patternSearch(letters, results){
+function patternSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
@@ -203,7 +202,7 @@ function patternSearch(letters, results){
     }
 }
 
-function subanagramSearch(letters, results){
+function subanagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
@@ -317,13 +316,18 @@ function highlightBlanks(word, blanks){
     return word;
 }
 
-function display(results){
-    var text = "";
-    for(var i = 0; i < results.length; i++){
+function displayResults(start){
+    var final = start + 200;
+    var text = document.getElementById("results").innerHTML;
+    if(text.lastIndexOf("<span") >= 0) text = text.substring(0, text.lastIndexOf("<span"));
+    for(var i = start; i < start + 200; i++){
         var word = highlightBlanks(results[i][0], results[i][1]);
-        text += "<br>" + word + ": " + getDefinition(results[i][0], "x");
+        text += word + ": " + getDefinition(results[i][0], "x") + "<br>";
     }
-    document.getElementById("results").innerHTML += text;
+    if(results.length > final){
+        text += "<span id = \"showmore\" onClick=\"displayResults(" + final + ")\">Showing results 1-" + final + ": Click to show more</span><br>";
+    }
+    document.getElementById("results").innerHTML = text;
 }
 
 readWords();
