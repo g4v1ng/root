@@ -47,7 +47,8 @@ function fillHashMap(dict){
 }
 
 function search(){
-    document.getElementById("results").innerText = "";
+    results = [];
+    document.getElementById("results").innerHTML = "";
     var letters = document.getElementById("letters").value.toUpperCase();
     var query = document.getElementById("query").value;
     var t1 = Date.now();
@@ -320,7 +321,7 @@ function displayResults(start){
     var final = start + 200;
     var text = document.getElementById("results").innerHTML;
     if(text.lastIndexOf("<span") >= 0) text = text.substring(0, text.lastIndexOf("<span"));
-    for(var i = start; i < start + 200; i++){
+    for(var i = start; i < Math.min(results.length, start + 200); i++){
         var word = highlightBlanks(results[i][0], results[i][1]);
         text += word + ": " + getDefinition(results[i][0], "x") + "<br>";
     }
