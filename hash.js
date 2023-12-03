@@ -54,7 +54,7 @@ class HashMap
     getHash(key) {
         var hashCode = 0;
         for (var i = 0; i < key.length; i++) {
-            hashCode += (key.charCodeAt(i)-65) * powModk(31, i, 275003);
+            hashCode += (key.charCodeAt(i)-65) * powModk(31, i, 275000);
             hashCode %= 275003;
         }
         return hashCode;
