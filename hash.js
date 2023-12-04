@@ -1,8 +1,10 @@
+// recursive function to perform powers at a mod
 function powModk(x, y, k){
     if(y == 0) return 1;
     return (x*powModk(x, y-1, k))%k;
 }
 
+// node class for a linked list which will be used for separate chaining
 class Node {
     constructor(key, value){
         this.key = key;
@@ -10,12 +12,12 @@ class Node {
         this.next = null;
     }
 }
-
+// linked list class
 class LinkedList {
     constructor(){
         this.root = null;
     }
-
+    // add element to linked list
     add(key, value){
         if(this.root == null) this.root = new Node(key, value);
         else{
@@ -34,6 +36,7 @@ class LinkedList {
             root.next = new Node(key, value);
         }
     }
+    // get words from key  
     get(key){
         var root = this.root;
         while(root != null){
