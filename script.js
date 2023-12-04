@@ -2,6 +2,7 @@ var definition = {};
 var array = [];
 var map;
 var results = [];
+var time = {};
 
 
 
@@ -55,7 +56,6 @@ function search(){
     if(query == "anagram") anagramSearch(letters);
     else if(query == "pattern") patternSearch(letters);
     else if(query == "subanagram") subanagramSearch(letters);
-    time = Date.now() - t1;
     results.sort(function(x, y){
         if(x[0].length < y[0].length) return 1;
         if(x[0].length > y[0].length) return -1;
@@ -63,7 +63,13 @@ function search(){
         if(x[0] > y[0]) return 1;
         return 0;
     });
-    document.getElementById("results").innerHTML += "<br>" + results.length + " results found in " + time + " ms<br>";
+    var text = "<br>" + results.length;
+    if(results.length != 1) text += " results found. ";
+    else text += " result found. ";
+    if(document.getElementById("array").checked) text += time["array"] + " ms using array. ";
+    if(document.getElementById("trie").checked) text += time["trie"] + " ms using trie. ";
+    if(document.getElementById("hash").checked) text += time["hash"] + " ms using hash map. ";
+    document.getElementById("results").innerHTML += text + "<br>";
     displayResults(0);
 }
 
@@ -71,7 +77,10 @@ function anagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
+    var start;
     if(useArray){
+        results = [];
+        start = Date.now();
         for(var i = 0; i < array.length; i++){
             if(results.includes(array[i])) continue;
             if(array[i].length < letters.length) continue;
@@ -93,11 +102,15 @@ function anagramSearch(letters){
             }
             if(valid) results.push([array[i], blanks]);
         }
+        time["array"] = Date.now() - start;
+        console.log(Date.now() - start);
     }
     if(useTrie){
         //something here
     }
     if(useHash){
+        results = [];
+        start = Date.now();
         if(!letters.includes("?")){    
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
@@ -138,6 +151,7 @@ function anagramSearch(letters){
                 }
             }
         }
+        time["hash"] = Date.now() - start;
     }
 }
 
@@ -145,7 +159,9 @@ function patternSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
-    if(useArray){    
+    if(useArray){
+        results = [];
+        start = Date.now(); 
         for(var i = 0; i < array.length; i++){
             var word = array[i];
             if(word.length < letters.length) continue;
@@ -163,11 +179,14 @@ function patternSearch(letters){
             }
             if(valid) results.push([array[i], blanks]);
         }
+        time["array"] = Date.now() - start;
     }
     if(useTrie){
         // something here
     }
     if(useHash){
+        results = [];
+        start = Date.now();
         if(!letters.includes("?")){     
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
@@ -200,6 +219,7 @@ function patternSearch(letters){
                 }
             }
         }
+        time["hash"] = Date.now() - start;
     }
 }
 
@@ -208,6 +228,8 @@ function subanagramSearch(letters){
     var useTrie = document.getElementById("trie").checked;
     var useArray = document.getElementById("array").checked;
     if(useArray){
+        results = [];
+        start = Date.now();
         for(var i = 0; i < array.length; i++){
             if(array[i].length > letters.length) break;
             var valid = true;
@@ -227,11 +249,14 @@ function subanagramSearch(letters){
             }
             if(valid) results.push([array[i], blanks]);
         }
+        time["array"] = Date.now() - start;
     }
     if(useTrie){
         // something here
     }
     if(useHash){
+        results = [];
+        start = Date.now();
         for(var i = 0; i < map.values.length; i++){
             if(map.values[i] == null) continue;
             var root = map.values[i].root;
@@ -259,6 +284,7 @@ function subanagramSearch(letters){
                 root = root.next;
             }
         }
+        time["hash"] = Date.now() - start;
     }
 }
 
