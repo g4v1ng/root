@@ -1,8 +1,7 @@
 class TrieNode {
     constructor() {
       this.children = {};
-      this.isEndOfWord = false;
-      this.words = set();
+      this.words = [];
     }
 }
   
@@ -12,15 +11,15 @@ class Trie {
     }
   
     insert(word) {
-      word = word.split("").sort().join("");
+      var sortedWord = word.split("").sort().join("");
       let node = this.root;
-      for (let char of word) {
+      for (let char of sortedWord) {
         if (!node.children[char]) {
           node.children[char] = new TrieNode();
         }
         node = node.children[char];
       }
-      node.isEndOfWord = true;
+      node.words.push(word);
     }
   
     search(word) {
@@ -31,7 +30,11 @@ class Trie {
         }
         node = node.children[char];
       }
-      return node.isEndOfWord;
+      return node.words;
+    }
+
+    anagrams(letters, results) {
+      var sortedLetters = letters.split("").sort().join("");
     }
   
     startsWith(prefix) {

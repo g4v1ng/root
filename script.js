@@ -1,6 +1,7 @@
 var definition = {};
 var array = [];
 var map;
+var trie;
 var results = [];
 var time = {};
 
@@ -19,6 +20,7 @@ function storeWords(dict){
     fillDefinitions(dict);
     fillArray(dict);
     fillHashMap(dict);
+    fillTrie(dict);
 }
 
 function fillDefinitions(dict){
@@ -50,7 +52,7 @@ function fillHashMap(dict){
 function fillTrie(dict){
     trie = new Trie();
     for(var i = 0; i < dict.length; i++){
-        trie.push(dict[i].split(" ")[0]);
+        trie.insert(dict[i].split(" ")[0]);
     }
 }
 
