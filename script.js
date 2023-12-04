@@ -47,6 +47,13 @@ function fillHashMap(dict){
     }
 }
 
+function fillTrie(dict){
+    trie = new Trie();
+    for(var i = 0; i < dict.length; i++){
+        trie.push(dict[i].split(" ")[0]);
+    }
+}
+
 function search(){
     results = [];
     document.getElementById("results").innerHTML = "";
