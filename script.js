@@ -50,6 +50,7 @@ function fillHashMap(dict){
 function search(){
     results = [];
     document.getElementById("results").innerHTML = "";
+    document.getElementById("times").innerHTML = "";
     var letters = document.getElementById("letters").value.toUpperCase();
     var query = document.getElementById("query").value;
     var t1 = Date.now();
@@ -66,10 +67,10 @@ function search(){
     var text = "<br>" + results.length;
     if(results.length != 1) text += " results found. ";
     else text += " result found. ";
-    if(document.getElementById("array").checked) text += time["array"] + " ms using array. ";
-    if(document.getElementById("trie").checked) text += time["trie"] + " ms using trie. ";
-    if(document.getElementById("hash").checked) text += time["hash"] + " ms using hash map. ";
-    document.getElementById("results").innerHTML += text + "<br>";
+    if(document.getElementById("array").checked) text += "<span style = \"color: red\">" + time["array"] + " ms</span> using array. ";
+    if(document.getElementById("trie").checked) text += "<span style = \"color: red\">" + time["trie"] + " ms</span> using trie. ";
+    if(document.getElementById("hash").checked) text += "<span style = \"color: red\">" + time["hash"] + " ms</span> using hash map. ";
+    document.getElementById("times").innerHTML += text + "<br>";
     displayResults(0);
 }
 
