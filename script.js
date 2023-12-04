@@ -176,7 +176,7 @@ function patternSearch(letters){
     }
 }
 
-// subanagram for each function
+// subanagram for each data structure
 function subanagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
