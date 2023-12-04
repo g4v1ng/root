@@ -35,7 +35,18 @@ class Trie {
 
     anagrams(letters, results) {
       var sortedLetters = letters.split("").sort().join("");
+      var numBlanks = 0;
+      while(sortedLetters[0] == "?") {
+        numBlanks++;
+        sortedLetters = sortedLetters.substring(1);
+      }
+      var node = this.root;
+      for(var i = 0; i < letters.length; i++){
+        this.anagrams(letters, results);
+      }
     }
+
+    subanagrams(letters, results)
   
     startsWith(prefix) {
       let node = this.root;
