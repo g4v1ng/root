@@ -51,26 +51,31 @@ class HashMap
     constructor() {
         this.values = [];
     }
+    // perform hash function on key
     getHash(key) {
         var hashCode = 0;
         for (var i = 0; i < key.length; i++) {
             hashCode += (key.charCodeAt(i)-65) * powModk(31, i, 275000);
-            hashCode %= 275003;
+            hashCode %= 275000;
         }
         return hashCode;
     }
+    // add value to the hash map
     add(value) {
         var key = value.split("").sort().join("");
         var hashValue = this.getHash(key);
         if(!this.values[hashValue]) this.values[hashValue] = new LinkedList();
         this.values[hashValue].add(key, value);
     }
+    // get value from the hash map
     get(key) {
         var hashValue = this.getHash(key);
         if(this.values[hashValue]) return this.values[hashValue].get(key);
         return [];
     }
+    // search if a word exists in the map
     pattern(letters, results){
+        // if no blanks, hash the key
         if(!letters.includes("?")){     
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
@@ -78,10 +83,11 @@ class HashMap
             for(var i = 0; i < anagrams.length; i++){
                 if(anagrams[i] == letters) results.push([anagrams[i], ""]);
             }
+        // if one or more blank, iterate through the hash map like an array
         }else{
-            for(var i = 0; i < map.values.length; i++){
-                if(map.values[i] == null) continue;
-                var root = map.values[i].root;
+            for(var i = 0; i < this.values.length; i++){
+                if(this.values[i] == null) continue;
+                var root = this.values[i].root;
                 while(root != null){
                     for(var j = 0; j < root.value.length; j++){
                         var word = root.value[j];
@@ -104,17 +110,20 @@ class HashMap
             }
         }
     }
+    // find anagrams of the letters
     anagrams(letters, results){
+        // if no blanks, hash the key
         if(!letters.includes("?")){    
             var key = letters.split("").sort().join("");
             var anagrams = map.get(key);
             for(var i = 0; i < anagrams.length; i++){
                 if(!results.includes(anagrams[i])) results.push([anagrams[i], ""]);
             }
+        // if one or more blank, iterate through hash map like an array
         }else{
-            for(var i = 0; i < map.values.length; i++){
-                if(map.values[i] == null) continue;
-                var root = map.values[i].root;
+            for(var i = 0; i < this.values.length; i++){
+                if(this.values[i] == null) continue;
+                var root = this.values[i].root;
                 while(root != null){
                     var key = root.key;
                     if(key.length != letters.length){
@@ -146,10 +155,12 @@ class HashMap
             }
         }        
     }
+    // find subanagrams of the letters
     subanagrams(letters, results){
-        for(var i = 0; i < map.values.length; i++){
-            if(map.values[i] == null) continue;
-            var root = map.values[i].root;
+        // cannot be done any more efficiently than iterating through every element in the map
+        for(var i = 0; i < this.values.length; i++){
+            if(this.values[i] == null) continue;
+            var root = this.values[i].root;
             while(root != null){
                 for(var j = 0; j < root.value.length; j++){
                     var word = root.value[j];
