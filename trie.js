@@ -4,13 +4,15 @@ class TrieNode {
       this.words = [];
     }
 }
-  
+
 class Trie {
   constructor() {
+    // maintains two tries, one with sorted and another with unsorted letters
     this.root = new TrieNode();
     this.unSorted = new TrieNode();
   }
 
+  // insert a word into tries
   insert(word) {
     var sortedWord = word.split("").sort().join("");
     let node = this.root;
@@ -32,6 +34,7 @@ class Trie {
     node.words.push(word);
   }
   
+    // check if a word exists in trie
     search(word) {
       let node = this.root;
       for (let char of word) {
@@ -43,9 +46,11 @@ class Trie {
       return node.words;
     }
 
+    // search for all anagrams of insert into results
     anagrams(letters, results) {
       var sortedLetters = letters.split("").sort().join("");
       var numBlanks = 0;
+      // count the number of blanks
       while(sortedLetters[0] == "?") {
         numBlanks++;
         sortedLetters = sortedLetters.substring(1);
@@ -53,6 +58,7 @@ class Trie {
       this.anagramsRecursive(sortedLetters, results, this.root, "", numBlanks, "?");
     }
 
+    // recursive algorithm to find all anagrams with blanks
     anagramsRecursive(letters, results, node, blanks, numBlanks, prev){
       if(letters.length == 0 && numBlanks == 0) {
         for(var i = 0; i < node.words.length; i++){
@@ -74,11 +80,13 @@ class Trie {
       }
     }
 
+    // find all words that match a certain pattern of letters
     pattern(letters, results){
       let node = this.unSorted;
       
       var blanks = "";
 
+      // recursive function to match pattern
       function subSearch(node, letters, results, blanks){
         if (letters.length == 0){
           for (let word of node.words){
@@ -104,6 +112,7 @@ class Trie {
 
     }
 
+    // search for all subanagrams and insert into results
     subanagrams(letters, results){
       var sortedLetters = letters.split("").sort().join("");
       var numBlanks = 0;
@@ -114,6 +123,7 @@ class Trie {
       this.subanagramsRecursive(sortedLetters, results, this.root, "", numBlanks, "?");
     }
 
+    // recursive function to find all subanagrams
     subanagramsRecursive(letters, results, node, blanks, numBlanks, prev){
       for(var i = 0; i < node.words.length; i++){
         results.push([node.words[i], blanks]);
@@ -134,17 +144,5 @@ class Trie {
           }
         }
       }
-    }
-
-  
-    startsWith(prefix) {
-      let node = this.root;
-      for (let char of prefix) {
-        if (!node.children[char]) {
-          return false; // prefix not found
-        }
-        node = node.children[char];
-      }
-      return true; // prefix found
     }
   }

@@ -6,7 +6,7 @@ var results = [];
 var time = {};
 
 
-
+// read words from scrabble dictionary
 function readWords(){
     var req = new XMLHttpRequest();
     req.onload = function(){
@@ -16,6 +16,7 @@ function readWords(){
     req.send();
 }
 
+// fill each data structure with dictionary
 function storeWords(dict){
     fillDefinitions(dict);
     fillArray(dict);
@@ -36,12 +37,14 @@ function fillDefinitions(dict){
     }
 }
 
+// fill array with dictionary
 function fillArray(dict){
     for(var i = 0; i < dict.length; i++){
         array.push(dict[i].split(" ")[0]);
     }
 }
 
+// fill hashmap with dictionary
 function fillHashMap(dict){
     map = new HashMap();
     for(var i = 0; i < dict.length; i++){
@@ -49,6 +52,7 @@ function fillHashMap(dict){
     }
 }
 
+// fill trie with dictionary
 function fillTrie(dict){
     trie = new Trie();
     for(var i = 0; i < dict.length; i++){
@@ -56,6 +60,7 @@ function fillTrie(dict){
     }
 }
 
+// search and display results based on user input and selections
 function search(){
     results = [];
     document.getElementById("results").innerHTML = "";
@@ -83,6 +88,7 @@ function search(){
     displayResults(0);
 }
 
+// anagram search for each data structure
 function anagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
@@ -129,6 +135,7 @@ function anagramSearch(letters){
     }
 }
 
+// pattern search for each data structure
 function patternSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
@@ -169,6 +176,7 @@ function patternSearch(letters){
     }
 }
 
+// subanagram for each function
 function subanagramSearch(letters){
     var useHash = document.getElementById("hash").checked;
     var useTrie = document.getElementById("trie").checked;
@@ -211,6 +219,7 @@ function subanagramSearch(letters){
     }
 }
 
+// retrieve the definition of a word
 function getDefinition(word, pos){
     var def = definition[word];
     if(def.includes("/")){
@@ -232,6 +241,7 @@ function getDefinition(word, pos){
     return cleanDefinition(def);
 }
 
+// clean definintion of word for legibility
 function cleanDefinition(def){
     if(def.includes("<")){
         var splitdef = def.split("<");
@@ -253,6 +263,7 @@ function cleanDefinition(def){
     return def;
 }
 
+// highlight each blank when a ? is used
 function highlightBlanks(word, blanks){
     for(var i = 0; i < blanks.length; i++){
         var n = word.lastIndexOf(blanks[i]);
@@ -266,6 +277,7 @@ function highlightBlanks(word, blanks){
     return word;
 }
 
+// display results on screen
 function displayResults(start){
     var final = start + 200;
     var text = document.getElementById("results").innerHTML;
@@ -282,6 +294,7 @@ function displayResults(start){
 
 readWords();
 
+// search functionality on "enter" key
 window.addEventListener("keyup", function(event) {
     event.preventDefault();
     if (document.activeElement == document.getElementById("letters") && event.key == "Enter"){
