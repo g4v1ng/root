@@ -116,7 +116,10 @@ function anagramSearch(letters){
         console.log(Date.now() - start);
     }
     if(useTrie){
-        //something here
+        results = [];
+        start = Date.now();
+        trie.anagrams(letters, results);
+        time["trie"] = Date.now() - start;
     }
     if(useHash){
         results = [];
@@ -262,7 +265,10 @@ function subanagramSearch(letters){
         time["array"] = Date.now() - start;
     }
     if(useTrie){
-        // something here
+        results = [];
+        start = Date.now();
+        trie.subanagrams(letters, results);
+        time["trie"] = Date.now() - start;
     }
     if(useHash){
         results = [];
