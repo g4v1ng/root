@@ -6,21 +6,31 @@ class TrieNode {
 }
   
 class Trie {
-    constructor() {
-      this.root = new TrieNode();
-    }
-  
-    insert(word) {
-      var sortedWord = word.split("").sort().join("");
-      let node = this.root;
-      for (let char of sortedWord) {
-        if (!node.children[char]) {
-          node.children[char] = new TrieNode();
-        }
-        node = node.children[char];
+  constructor() {
+    this.root = new TrieNode();
+    this.unSorted = new TrieNode();
+  }
+
+  insert(word) {
+    var sortedWord = word.split("").sort().join("");
+    let node = this.root;
+    for (let char of sortedWord) {
+      if (!node.children[char]) {
+        node.children[char] = new TrieNode();
       }
-      node.words.push(word);
+      node = node.children[char];
     }
+    node.words.push(word);
+    
+    node = this.unSorted;
+    for (let char of word) {
+      if (!node.children[char]) {
+        node.children[char] = new TrieNode();
+      }
+      node = node.children[char];
+    }
+    node.words.push(word);
+  }
   
     search(word) {
       let node = this.root;
@@ -64,6 +74,36 @@ class Trie {
       }
     }
 
+    pattern(letters, results){
+      let node = this.unSorted;
+      
+      var blanks = "";
+
+      function subSearch(node, letters, results, blanks){
+        if (letters.length == 0){
+          for (let word of node.words){
+            results.push([word, blanks]);
+          }
+          return;
+        }
+
+        if (letters[0] == "?"){
+          for(var i = 0; i < 26; i++){
+            var char = String.fromCharCode(65 + i);
+            if (node.children[char]){
+              subSearch(node.children[char], letters.substring(1), results, blanks + char);
+            }
+          }
+        }
+        else if (node.children[letters[0]]){
+          subSearch(node.children[letters[0]], letters.substring(1), results, blanks);
+        }
+      }
+      
+      subSearch(node, letters, results, blanks);
+
+    }
+
     subanagrams(letters, results){
       var sortedLetters = letters.split("").sort().join("");
       var numBlanks = 0;
@@ -95,6 +135,7 @@ class Trie {
         }
       }
     }
+
   
     startsWith(prefix) {
       let node = this.root;

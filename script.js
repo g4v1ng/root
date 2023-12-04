@@ -195,7 +195,10 @@ function patternSearch(letters){
         time["array"] = Date.now() - start;
     }
     if(useTrie){
-        // something here
+        results = [];
+        start = Date.now(); 
+        trie.pattern(letters, results);
+        time["trie"] = Date.now() - start;
     }
     if(useHash){
         results = [];
